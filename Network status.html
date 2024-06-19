@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background-color: #f2f2f2;
+        }
+        .wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .wrapper .toast {
+            background: #fff;
+            padding: 20px 15px 20px 20px;
+            border-radius: 10px;
+            width: 430px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid #2ecc71;
+            justify-content: space-between;
+            box-shadow: 1px 7px 14px -5px rgba(0,0,0,0.15);
+        }
+        .wrapper .toast .offline {
+            border-color: #ccc;
+        }
+        .toast .content {
+            display: flex;
+            align-items: center;
+        }
+        .toast .content .icon {
+            font-size: 25px;
+            background: #2ecc71;
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            color: #fff;
+        }
+        .toast .offline .content .icon {
+            background: #ccc;
+        }
+        .toast .content .details {
+            margin-left: 15px;
+        }
+        .content .details span {
+            font-size: 20px;
+            font-weight: 500;
+        }
+        .content .details p {
+            color: #878787; 
+        }
+        .toast .close-icon {
+            background: #e7e3e3;
+            height: 40px;
+            width: 40px;
+            text-align: center;
+            line-height: 40px;
+            font-size: 23px;
+            cursor: pointer;
+            color: #292525;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="toast">
+            <div class="content">
+                <div class="icon"></div>
+                <div class="details">
+                    <span></span>
+                    <p></p>
+                </div>
+            </div>
+            <div class="close-icon"><i class="fa-solid fa-circle-xmark"></i></div>
+        </div>
+    </div>
+    <script>
+        const wrapper = document.querySelector(".wrapper"),
+              toast = wrapper.querySelector(".toast"),
+              wifiIcon = wrapper.querySelector(".icon"),
+              title = wrapper.querySelector("span"),
+              subTitle = wrapper.querySelector("p");
+
+        window.onload = () => {
+            function ajax() {
+                let xhr = new XMLHttpRequest();
+                xhr.open("GET", "https://jsonplaceholder.typicode.com/posts", true);
+                xhr.onload = () => {
+                   if (xhr.status == 200 && xhr.status < 300) {
+                        toast.classList.remove("offline");
+                        title.innerText = "You're online now";
+                        subTitle.innerText = "Hurray! Internet is connected.";
+                        wifiIcon.innerHTML = '<i class="fa-solid fa-wifi"></i>';
+                   } else {
+                        offline();
+                   }
+                };
+                xhr.onerror = () => {
+                    offline();
+                };
+                xhr.send();
+            }
+
+            function offline() {
+                toast.classList.add("offline");
+                title.innerText = "You're offline now";
+                subTitle.innerText = "Oops! Internet is disconnected.";
+                wifiIcon.innerHTML = '<i class="fa-regular fa-wifi-slash"></i>';
+            }
+
+            setInterval(() => {
+                ajax();
+            }, 1000); 
+        };
+    </script>
+</body>
+</html>
